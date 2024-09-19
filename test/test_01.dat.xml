@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fakeTDLFile>
+  <fakeTDL>
+    <messageType>T</messageType>
+    <source>AG123</source>
+    <sendTime>01:02:03</sendTime>
+    <track/>
+    <mustAck>false</mustAck>
+    <messageID>1</messageID>
+    <sourceLat>41.0</sourceLat>
+    <sourceLon>-70.0</sourceLon>
+    <sourceElev>400</sourceElev>
+    <trackNum>UU777</trackNum>
+    <time>01:02:01</time>
+    <lat>41.1</lat>
+    <lon>-69.9</lon>
+    <elev>350</elev>
+    <pointType>W</pointType>
+    <quality>A</quality>
+    <course>75</course>
+    <speed>200</speed>
+  </fakeTDL>
+  <fakeTDL>
+    <messageType>D</messageType>
+    <source>AG123</source>
+    <sendTime>01:02:04</sendTime>
+    <identity/>
+    <mustAck>true</mustAck>
+    <messageID>2</messageID>
+    <trackNum>UU777</trackNum>
+    <time>01:02:02</time>
+    <iff>F</iff>
+    <cat>A</cat>
+    <type>0</type>
+    <desc>HERCULES_C_130_C4/C5(J)</desc>
+  </fakeTDL>
+  <fakeTDL>
+    <messageType>A</messageType>
+    <source>BE234</source>
+    <sendTime>01:02:14</sendTime>
+    <ack/>
+    <dest>AG123</dest>
+    <ackID><item>2</item></ackID>
+  </fakeTDL>
+</fakeTDLFile>

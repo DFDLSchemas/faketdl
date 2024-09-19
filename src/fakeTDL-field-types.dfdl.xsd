@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
+  targetNamespace="urn:com.owlcyberdefense.fakeTDL">
+
+  <include schemaLocation="fakeTDL-base.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
+    </appinfo>
+  </annotation>
+
+  <simpleType name="messageType"
+              dfdl:lengthKind="implicit">
+    <restriction base="xs:string" >
+      <minLength value="1"/>
+      <maxLength value="1"/>
+      <!--
+      Note: XML Schema cybersecurity best practices say to always give a maximum length to types that can otherwise
+      have unbounded lengths
+      -->
+      <enumeration value="T"/><!-- Track -->
+      <enumeration value="D"/><!-- D for iDentity -->
+      <enumeration value="A"/><!-- Ack -->
+    </restriction>
+  </simpleType>
+
+  <simpleType name="unitNumber"
+              dfdl:lengthKind="implicit">
+    <restriction base="xs:string">
+      <minLength value="5"/>
+      <maxLength value="5"/>
+      <pattern value="[A-Z0-9]{2}[0-9]{3}"/>
+      <!--
+      Note: XML Schema cybersecurity best practices say to avoid the "*" and "+" characters in regular expressions
+      and to be explicit about the minimum and maximum number of repeats of any sub-pattern.
+      -->
+    </restriction>
+  </simpleType>
+
+  <!--
+  DFDL refers to date and time related concepts collectively with the term "calendar", which
+  is a convention also used by many Java libraries.
+  -->
+  <simpleType name="timeOfDay"
+              dfdl:calendarPatternKind="explicit"
+              dfdl:calendarPattern="hhmmss"
+              dfdl:calendarTimeZone="UTC"
+              dfdl:binaryCalendarRep="bcd"
+              dfdl:lengthKind="explicit"
+              dfdl:length="3">
+    <restriction base="xs:time"/>
+  </simpleType>
+
+  <simpleType name="mustAck"
+              dfdl:binaryBooleanFalseRep="0"
+              dfdl:binaryBooleanTrueRep="1"
+              dfdl:lengthKind="explicit"
+              dfdl:length="1">
+    <restriction base="xs:boolean"/>
+  </simpleType>
+
+  <simpleType name="messageID"
+              dfdl:lengthKind="implicit">
+    <restriction base="xs:unsignedInt">
+      <maxInclusive value="99999"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="latitude"
+    dfdl:binaryFloatRep="ieee">
+    <restriction base="xs:float">
+      <minInclusive value="-90.0"/>
+      <maxInclusive value="90.0"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="longitude"
+    dfdl:binaryFloatRep="ieee">
+    <restriction base="xs:float">
+      <minInclusive value="-180.0"/>
+      <maxInclusive value="180.0"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="elevation">
+    <annotation><documentation>
+      Units are 25 feet above Mean Sea Level.
+    </documentation></annotation>
+    <restriction base="xs:short">
+      <minInclusive value="-1000"/>
+      <maxInclusive value="32000"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="trackPointType" dfdl:lengthKind="implicit">
+    <restriction base="xs:string">
+      <minLength value="1"/>
+      <maxLength value="1"/>
+      <enumeration value="S"/><!-- start point -->
+      <enumeration value="W"/><!-- way point -->
+      <enumeration value="E"/><!-- end point --> 
+    </restriction>
+  </simpleType>
+
+  <simpleType name="trackPointQuality">
+     <restriction base="xs:string">
+       <minLength value="1"/>
+       <maxLength value="1"/>
+       <enumeration value="E"/><!-- estimated -->
+       <enumeration value="A"/><!-- actual or observed -->
+     </restriction>
+  </simpleType>
+
+  <simpleType name="course">
+    <restriction base="xs:unsignedShort">
+      <minInclusive value="0"/>
+      <maxInclusive value="359"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="speed">
+    <annotation><documentation>
+      Units are data-miles per hour. A data-mile is 6000 feet.
+    </documentation></annotation>
+    <restriction base="xs:unsignedShort">
+      <maxInclusive value="20000"/><!-- this limit is a bit above the max reentry speed of a ballistic missile -->
+    </restriction>
+  </simpleType>
+
+  <simpleType name="IFF"><!-- IFF = Identity Friend or Foe -->
+    <restriction base="xs:string">
+      <minLength value="1"/>
+      <maxLength value="1"/>
+      <enumeration value="U"/><!-- unknown -->
+      <enumeration value="F"/><!-- friend -->
+      <enumeration value="E"/><!-- enemy -->
+    </restriction>
+  </simpleType>
+
+  <simpleType name="category">
+    <restriction base="xs:string">
+      <minLength value="1"/>
+      <maxLength value="1"/>
+      <enumeration value="L"/><!-- land -->
+      <enumeration value="S"/><!-- sea (surface) -->
+      <enumeration value="U"/><!-- sub -->
+      <enumeration value="A"/><!-- air as in aircraft -->
+      <enumeration value="W"/><!-- weapon such as missile or torpedo -->
+    </restriction>
+  </simpleType>
+
+  <simpleType name="entityTypeDetail">
+    <restriction base="xs:unsignedShort">
+      <enumeration value="0"/> <!-- means unspecified aka "no statement" -->
+      <enumeration value="1"/> <!-- some entity type -->
+      <enumeration value="2"/> <!-- some other entity type -->
+      <!--
+      not bothering to fill in more of these until needed for examples
+      -->
+      <maxInclusive value="400"/><!-- values above this are unused -->
+    </restriction>
+  </simpleType>
+
+  <simpleType name="identDescription"
+    dfdl:textTrimKind="padChar"
+    dfdl:textPadKind="padChar"
+    dfdl:textStringPadCharacter="%#r00;"
+    dfdl:lengthKind="explicit"
+    dfdl:length="38">
+    <annotation><documentation>
+      Max length 38 characters. Unused characters at the end are filled with NUL.
+      Allowed characters are "A-Z0-9.-_/()[]:" but must begin with A-Z or digit.
+      Spaces are allowed, but cannot be leading nor trailing, and multiple spaces in a row
+      are also not allowed, multiple punctuation in a row are also not allowed.
+      Parenthesis and brackets should be matched properly, but there is no way to
+      enforce that from a regular expression pattern.
+    </documentation></annotation>
+    <restriction base="xs:string">
+      <minLength value="1"/>
+      <maxLength value="38"/>
+      <pattern value="[A-Z0-9]+([. \-_:/][A-Z0-9()\[\]]+)*"/>
+      <!-- using regex "+" and "*" here is ok, since there is a maxLength facet limiting the length -->
+    </restriction>
+  </simpleType>
+
+  <complexType name="markerElement">
+    <sequence/>
+  </complexType>
+
+</schema>

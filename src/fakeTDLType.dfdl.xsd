@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
+  targetNamespace="urn:com.owlcyberdefense.fakeTDL">
+
+  <!--
+  The above schema element is the way to define a DFDL schema that has a
+  target namespace.
+
+  DFDL schemas that define reusable types, groups, and DFDL formats
+  should have a target namespace.
+
+  It is generally good practice to avoid declaring global elements in DFDL schemas
+  that have target namespaces. Doing so introduces the need for namespace
+  prefix definitions in the XML instance documents used when parsing/unparsing data.
+
+  In DFDL schemas, it is best practice to declare global elements only in
+  schemas that have no target namespace.
+  -->
+
+  <include schemaLocation="fakeTDL-base.dfdl.xsd" />
+  <include schemaLocation="fakeTDL-field-types.dfdl.xsd"/>
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
+
+      <dfdl:defineFormat name="fakeTDL-fixedLengthMessage">
+        <dfdl:format ref="fakeTDL:fakeTDL-base"
+                     lengthKind="explicit"
+                     length="64"/>
+      </dfdl:defineFormat>
+
+    </appinfo>
+  </annotation>
+
+  <complexType name="fakeTDLType">
+    <annotation>
+      <documentation>
+        To define a fakeTDL message element, use this type,
+        and add the dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage" property.
+      </documentation>
+    </annotation>
+    <sequence>
+      <element name="messageType" type="fakeTDL:messageType"/>
+      <element name="source" type="fakeTDL:unitNumber"/>
+      <element name="sendTime" type="fakeTDL:timeOfDay"/>
+      <choice dfdl:choiceDispatchKey='{ messageType }'>
+        <group ref="fakeTDL:track" dfdl:choiceBranchKey="T"/>
+        <group ref="fakeTDL:ident" dfdl:choiceBranchKey="D"/>
+        <group ref="fakeTDL:ack" dfdl:choiceBranchKey="A"/>
+      </choice>
+    </sequence>
+  </complexType>
+
+
+  <group name="track">
+    <sequence>
+      <element name="track" type="fakeTDL:markerElement"/>
+      <group ref="fakeTDL:ackRelated"/>
+      <element name="sourceLat" type="fakeTDL:latitude"/>
+      <element name="sourceLon" type="fakeTDL:longitude"/>
+      <element name="sourceElev" type="fakeTDL:elevation"/>
+      <element name="trackNum" type="fakeTDL:unitNumber"/>
+      <element name="time" type="fakeTDL:timeOfDay"/>
+      <element name="lat" type="fakeTDL:latitude"/>
+      <element name="lon" type="fakeTDL:longitude"/>
+      <element name="elev" type="fakeTDL:elevation"/>
+      <element name="pointType" type="fakeTDL:trackPointType"/>
+      <element name="quality" type="fakeTDL:trackPointQuality"/>
+      <element name="course" type="fakeTDL:course"/>
+      <element name="speed" type="fakeTDL:speed"/>
+    </sequence>
+  </group>
+
+  <group name="ackRelated">
+    <sequence>
+      <element name="mustAck" type="fakeTDL:mustAck"/>
+      <element name="messageID" type="fakeTDL:messageID"/>
+    </sequence>
+  </group>
+
+  <group name="ident">
+    <sequence>
+      <element name="identity" type="fakeTDL:markerElement"/>
+      <group ref="fakeTDL:ackRelated"/>
+      <element name="trackNum" type="fakeTDL:unitNumber"/>
+      <element name="time" type="fakeTDL:timeOfDay"/>
+      <element name="iff" type="fakeTDL:IFF"/>
+      <element name="cat" type="fakeTDL:category"/>
+      <element name="type" type="fakeTDL:entityTypeDetail"/> <!-- 26 bytes to an including here -->
+      <element name="desc" type="fakeTDL:identDescription"/> <!-- leaves 38 chars for description -->
+    </sequence>
+  </group>
+
+  <group name="ack">
+    <sequence>
+      <element name="ack" type="fakeTDL:markerElement"/>
+      <!-- acks themselves don't have the "ackRelated" fields -->
+      <element name="dest" type="fakeTDL:unitNumber"/>
+      <!--
+      our 64-byte messages have 9 bytes of common fields, then 5 more for dest field
+      so we have 64-14, or 50 bytes left to put messageIDs, each of which is 4 bytes.
+      so we can fit up to 12 messageIDs. 2 bytes will be unused at the end of the message.
+
+      Hence, at least the first messageID must be non-zero.
+
+      We use a fillByte of zero here so that an unused messageID/item has value 0.
+      This lets the array of messageIDs be variable length in the infoset even though
+      the data is fixed length.
+      -->
+      <element name="ackID"
+               dfdl:fillByte="%#r00;"
+               dfdl:length="48"
+               dfdl:lengthKind="explicit">
+        <complexType>
+          <sequence>
+            <element name="item" type="fakeTDL:messageID"
+                     minOccurs="1" maxOccurs="12" dfdl:occursCountKind="implicit">
+              <annotation>
+                <appinfo source="http://www.ogf.org/dfdl/">
+                  <!--
+                  This discriminator means the implicit number of occurrences
+                  extends only while the values are non-zero.
+                  -->
+                  <dfdl:discriminator>{ . ne 0}</dfdl:discriminator>
+                </appinfo>
+              </annotation>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </group>
+
+</schema>
