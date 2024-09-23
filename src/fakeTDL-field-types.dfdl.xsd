@@ -51,7 +51,6 @@
   <simpleType name="timeOfDay"
               dfdl:calendarPatternKind="explicit"
               dfdl:calendarPattern="hhmmss"
-              dfdl:calendarTimeZone="UTC"
               dfdl:binaryCalendarRep="bcd"
               dfdl:lengthKind="explicit"
               dfdl:length="3">

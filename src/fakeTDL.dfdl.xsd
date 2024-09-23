@@ -40,4 +40,22 @@
     </xs:documentation></xs:annotation>
   </xs:element>
 
+  <xs:element name="fakeTDLFile">
+    <xs:annotation>
+      <xs:documentation>
+        Use this element for testing parse/unparse of files of multiple fakeTDL messages.
+        This is primarily for testing purposes.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000"/>
+        <!--
+        note: XML Schema cybersecurity best practices say to avoid use of maxOccurs="unbounded"
+        and pick a sane maximum
+        -->
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
 </xs:schema>

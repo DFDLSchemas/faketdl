@@ -16,4 +16,5 @@ class TestFakeTDL {
   import TestFakeTDL._
 
   @Test def test_fakeTDL_01(): Unit = { runner.runOneTest("test_fakeTDL_01") }
+  @Test def test_fakeTDLFile_01(): Unit = { runner.runOneTest("test_fakeTDLFile_01") }
 }
