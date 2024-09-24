@@ -47,11 +47,21 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000"/>
-        <!--
-        note: XML Schema cybersecurity best practices say to avoid use of maxOccurs="unbounded"
-        and pick a sane maximum.
-        -->
+        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000" dfdl:occursCountKind="implicit">
+          <xs:annotation><xs:appinfo source="http://www.ogf.org/dfdl/">
+            <!--
+            This array of fakeTDL messages must consume the whole file.
+
+            This discriminator means: if there is even 1 byte of data available then
+            the DFDL parser decides that this variable-occurrences array *must* have
+            one more element.
+
+            That implies that the whole file must contain fakeTDL messages and
+            they must consume all the data in the file.
+            -->
+            <dfdl:discriminator testKind="pattern" testPattern="."/>
+          </xs:appinfo></xs:annotation>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

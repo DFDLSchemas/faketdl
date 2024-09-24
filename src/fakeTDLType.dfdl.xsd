@@ -43,9 +43,9 @@
         This reusable format definition centralizes the magic number 64
         which is the message length for fakeTDL
         -->
-        <dfdl:format ref="fakeTDL:fakeTDL-base"
-                     lengthKind="explicit"
-                     length="64"/>
+        <dfdl:format
+          lengthKind="explicit"
+          length="64"/>
       </dfdl:defineFormat>
 
     </appinfo>
