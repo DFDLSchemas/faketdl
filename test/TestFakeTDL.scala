@@ -11,6 +11,12 @@ object TestFakeTDL {
   }
 }
 
+/**
+ * This just makes it convenient to run all the tests one by one in a programmers IDE
+ * or using 'sbt' (simple build tool).
+ *
+ * One can also run tests from the Daffodil Command Line Interface (CLI)
+ */
 class TestFakeTDL {
 
   import TestFakeTDL._
