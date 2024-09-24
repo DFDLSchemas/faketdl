@@ -9,18 +9,25 @@
   targetNamespace="urn:com.owlcyberdefense.fakeTDL">
 
   <!--
-  The above schema element is the way to define a DFDL schema that has a
-  target namespace.
+  It is a DFDL best practice to define the various message/record types as
+  global complexTypes and global groups, and to do so in a separate DFDL schema file that
+  (a) has a target namespace for the format
+  (b) does not define any global elements
 
-  DFDL schemas that define reusable types, groups, and DFDL formats
-  should have a target namespace.
+  The above schema element is the way to define a DFDL schema that has a
+  target namespace. A unique prefix is bound to the target namespace, and uses of the
+  schema should reuse this same prefix definition for consistency. It does not need to be
+  a very short prefix as it won't be typed very often.
+
+  The above schema element also uses a default namespace to avoid all the "xs:" clutter
+  that would otherwise be needed on every XSD/DFDL keyword. This makes the schema more readable.
 
   It is generally good practice to avoid declaring global elements in DFDL schemas
-  that have target namespaces. Doing so introduces the need for namespace
+  that have target namespaces. Doing so avoids the need for namespace
   prefix definitions in the XML instance documents used when parsing/unparsing data.
 
   In DFDL schemas, it is best practice to declare global elements only in
-  schemas that have no target namespace.
+  schemas that have no target namespace. (See the fakeTDL.dfdl.xsd file.)
   -->
 
   <include schemaLocation="fakeTDL-base.dfdl.xsd" />
@@ -32,6 +39,10 @@
       <dfdl:format ref="fakeTDL:fakeTDL-base"/>
 
       <dfdl:defineFormat name="fakeTDL-fixedLengthMessage">
+        <!--
+        This reusable format definition centralizes the magic number 64
+        which is the message length for fakeTDL
+        -->
         <dfdl:format ref="fakeTDL:fakeTDL-base"
                      lengthKind="explicit"
                      length="64"/>
@@ -43,8 +54,11 @@
   <complexType name="fakeTDLType">
     <annotation>
       <documentation>
-        To define a fakeTDL message element, use this type,
-        and add the dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage" property.
+        To define a fakeTDL message element, use this type as the element type
+        and add the dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage" property to the element
+        declaration.
+
+        (See fakeTDL.dfdl.xsd which defines elements.)
       </documentation>
     </annotation>
     <sequence>
@@ -121,6 +135,10 @@
                dfdl:lengthKind="explicit">
         <complexType>
           <sequence>
+            <!--
+            A common DFDL idiom is to have a named element representing the entire array,
+            and the items of the array have a generic name like "item".
+            -->
             <element name="item" type="fakeTDL:messageID"
                      minOccurs="1" maxOccurs="12" dfdl:occursCountKind="implicit">
               <annotation>
@@ -128,6 +146,10 @@
                   <!--
                   This discriminator means the implicit number of occurrences
                   extends only while the values are non-zero.
+
+                  DFDL has an occursCountKind="stopValue", but it is not implemented in
+                  Daffodil as of version 3.9.0, so we use occursCountKind 'implicit'
+                  and a dfdl:discriminator to determine when we have another array element.
                   -->
                   <dfdl:discriminator>{ . ne 0}</dfdl:discriminator>
                 </appinfo>

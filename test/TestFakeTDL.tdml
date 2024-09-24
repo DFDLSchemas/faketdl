@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+TDML is a convenient way to package tests of DFDL schemas and test data
 
+In this test suite, we use the TDML namespace as the default namespace to
+avoid the need to have "tdml:" prefixes on all the TDML elements.
+
+There are a few extra namespace prefix definitions here that aren't used yet,
+but they are commonly needed so we have them here for future convenience.
+-->
 <testSuite
   xmlns="http://www.ibm.com/xmlns/dfdl/testData"
   xmlns:tdml="http://www.ibm.com/xmlns/dfdl/testData"
@@ -10,6 +18,16 @@
   defaultRoundTrip="onePass"
   defaultValidation="on">
 
+  <!--
+  This parser test case just points at the various test files: the schema (aka model),
+  the input data (aka document), and the expected output (aka infoset).
+
+  Per the defaultRoundTrip 'onePass' above, this test will
+  parse the data, compare with the expected infoset,
+  then unparse the data, and compare with the original data.
+
+  TDML also allows you to create negative tests that expect various kinds of errors.
+  -->
   <parserTestCase name="test_fakeTDLFile_01" root="fakeTDLFile" model="fakeTDL.dfdl.xsd">
     <document>
       <documentPart type="file">test_01.dat</documentPart>
@@ -19,6 +37,12 @@
     </infoset>
   </parserTestCase>
 
+  <!--
+  This parser test case illustrates another convenient TDML idiom. It's possible
+  to reference your DFDL schema (aka model), but to explicitly include the data
+  in the test case right here (in bits, bytes, or text), and also to include the
+  expected infoset as XML right here in the test case.
+  -->
   <parserTestCase name="test_fakeTDL_01" root="fakeTDL" model="fakeTDL.dfdl.xsd">
     <document>
       <documentPart type="byte"><![CDATA[
@@ -29,8 +53,8 @@
       ]]></documentPart>
     </document>
     <infoset>
-      <tdml:dfdlInfoset xmlns="">
-        <fakeTDL>
+      <dfdlInfoset>
+        <fakeTDL xmlns=""> <!-- Trick! Turn off default namespace. That's what xmlns="" does. -->
           <messageType>T</messageType>
           <source>AG123</source>
           <sendTime>01:02:03</sendTime>
@@ -50,7 +74,7 @@
           <course>75</course>
           <speed>200</speed>
         </fakeTDL>
-      </tdml:dfdlInfoset>
+      </dfdlInfoset>
     </infoset>
   </parserTestCase>
 
