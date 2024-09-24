@@ -11,19 +11,17 @@
   It defines a reusable fakeTDL element which can be used directly for testing or
   incorporated into a larger structure via an element reference.
 
-  The right way to use this file is to xs:include it into another
-  DFDL schema which also has no target namespace. We avoid defining global
-  elements in any namespace to avoid XML namespace complexities
-  as much as possible. We only define groups, types, and DFDL formats in
-  schemas that have namespaces. This eliminates any need for XML namespace prefixes
-  on any XML elements in the parsed data.
+  It also defines a fakeTDLFile element which is primarily for testing and allows
+  parsing and unparsing files containing many fakeTDL messages.
 
-  Note that a schema with no target namespace cannot have a default
-  namespace definition such as defining the default namespace to be the XML Schema namespace.
+  Note that a schema with no target namespace cannot have a default namespace definition.
   That means you can't get away with avoiding the need for the "xs:" prefixes on all
-  the XML schema keywords in a no-target-namespace schema. As a result, it's best for these
+  the XSD/DFDL keywords in a no-target-namespace schema. As a result, it's best for these
   no-namespace schemas that define global elements to be kept as small as possible.
 
+  Hence, schema files that define global elements should *only* define global elements.
+  Other definitions of the types/groups used, should go in an imported schema file
+  which has a namespace.
   -->
 
   <xs:import namespace="urn:com.owlcyberdefense.fakeTDL" schemaLocation="fakeTDLType.dfdl.xsd" />
@@ -49,11 +47,21 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000"/>
-        <!--
-        note: XML Schema cybersecurity best practices say to avoid use of maxOccurs="unbounded"
-        and pick a sane maximum
-        -->
+        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000" dfdl:occursCountKind="implicit">
+          <xs:annotation><xs:appinfo source="http://www.ogf.org/dfdl/">
+            <!--
+            This array of fakeTDL messages must consume the whole file.
+
+            This discriminator means: if there is even 1 byte of data available then
+            the DFDL parser decides that this variable-occurrences array *must* have
+            one more element.
+
+            That implies that the whole file must contain fakeTDL messages and
+            they must consume all the data in the file.
+            -->
+            <dfdl:discriminator testKind="pattern" testPattern="."/>
+          </xs:appinfo></xs:annotation>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

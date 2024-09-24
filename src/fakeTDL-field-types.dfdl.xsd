@@ -8,6 +8,20 @@
   xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
   targetNamespace="urn:com.owlcyberdefense.fakeTDL">
 
+  <!--
+  DFDL Best practices suggest defining reusable field types in a separate schema file.
+
+  This keeps the primary schema files cleaner and more declarative and
+  encourages re-use rather than repeating many DFDL properties.
+
+  It also simply makes editing easier, as the files stay more manageable in size,
+  which keeps text editors working smoothly.
+
+  Another best practice is if a simple type becomes a large enumeration taking up more
+  than a screenful of lines, that such enum types are split out into a separate
+  schema file.
+  -->
+
   <include schemaLocation="fakeTDL-base.dfdl.xsd" />
 
   <annotation>

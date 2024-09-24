@@ -8,14 +8,29 @@
   xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
   targetNamespace="urn:com.owlcyberdefense.fakeTDL">
 
+  <!--
+  DFDL best practice is to define a "base" format schema file.
+  This will get imported in many places and centralizes all your
+  global format property decisions
+  -->
+
   <include schemaLocation="/org/apache/daffodil/xsd/DFDLGeneralFormat.dfdl.xsd" />
 
   <annotation>
     <appinfo source="http://www.ogf.org/dfdl/">
       <dfdl:defineFormat name="fakeTDL-base">
+        <!--
+        In your base format, it is worth it to define all properties relevant to your format
+        even if they have the same value as in the included DFDLGeneralFormat (which is a
+        consistent set of starting values for properties).
+
+        That way, this schema file declares the important aspects of your format
+        explicitly.
+        -->
         <dfdl:format
           ref="fakeTDL:GeneralFormat"
           representation="binary"
+          byteOrder="bigEndian"
           encoding="ascii"
           fillByte="X"
           lengthUnits="bytes"
@@ -23,6 +38,7 @@
           alignment="1"
           binaryNumberRep="binary"
           calendarTimeZone="UTC"
+          occursCountKind="implicit"
         />
       </dfdl:defineFormat>
       <dfdl:format ref="fakeTDL:fakeTDL"/>
