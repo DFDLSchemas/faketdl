@@ -23,10 +23,13 @@
   -->
 
   <include schemaLocation="fakeTDL-base.dfdl.xsd" />
+  <include schemaLocation="fakeTDL-enum-entityTypeDetail.dfdl.xsd"/>
 
   <annotation>
     <appinfo source="http://www.ogf.org/dfdl/">
-      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
+
+      <dfdl:format  ref="fakeTDL:baseFormat" />
+
     </appinfo>
   </annotation>
 
@@ -35,10 +38,6 @@
     <restriction base="xs:string" >
       <minLength value="1"/>
       <maxLength value="1"/>
-      <!--
-      Note: XML Schema cybersecurity best practices say to always give a maximum length to types that can otherwise
-      have unbounded lengths
-      -->
       <enumeration value="T"/><!-- Track -->
       <enumeration value="D"/><!-- D for iDentity -->
       <enumeration value="A"/><!-- Ack -->
@@ -50,11 +49,13 @@
     <restriction base="xs:string">
       <minLength value="5"/>
       <maxLength value="5"/>
-      <pattern value="[A-Z0-9]{2}[0-9]{3}"/>
       <!--
-      Note: XML Schema cybersecurity best practices say to avoid the "*" and "+" characters in regular expressions
-      and to be explicit about the minimum and maximum number of repeats of any sub-pattern.
+      Note that the XML Schema dialect of regular expressions
+      allowed in these pattern facets
+      is very minimal compared to the regular expressions allowed
+      in DFDL properties like dfdl:lengthPattern.
       -->
+      <pattern value="[A-Z0-9]{2}[0-9]{3}"/>
     </restriction>
   </simpleType>
 
@@ -86,7 +87,7 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="latitude"
+  <simpleType name="latitude_degrees"
     dfdl:binaryFloatRep="ieee">
     <restriction base="xs:float">
       <minInclusive value="-90.0"/>
@@ -94,15 +95,44 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="longitude"
-    dfdl:binaryFloatRep="ieee">
+  <simpleType name="longitude_degrees"
+              dfdl:binaryFloatRep="ieee"
+              dfdl:lengthKind="implicit">
+    <annotation><appinfo source="http://www.ogf.org/dfdl/">
+      <!--
+      Here is a commented-out assertion that illustrates a bad practice that
+      DFDL beginners often seem to do.
+
+      The idea is to insert dfdl:assert that enforce validity as well
+      as well-formedness on the data. I.e., why bother with more parsing
+      if the data is invalid?
+
+      A dfdl:assert of dfdl:checkConstraints tells the DFDL parser to validate
+      the well-formed data against the facets and, if it fails, to escalate
+      that to a parse error.
+
+      This is a bad idea for a number of reasons
+      (1) you cannot use the schema to parse invalid data and study it
+      (2) improper separation of concerns - applications might require use of a
+          separate validator.
+      (3) DFDL speculative parsing backtracks and tries other possibilities on
+          parse errors. Data having invalid values is usually NOT a reason to
+          backtrack and try other alternatives if the data is well-formed.
+
+      <dfdl:assert>{ dfdl:checkConstraints(.) }</dfdl:assert>
+
+      There are reasons to use checkConstraints, but forcing validity
+      on the parse process is not one of them.
+      -->
+    </appinfo></annotation>
     <restriction base="xs:float">
       <minInclusive value="-180.0"/>
       <maxInclusive value="180.0"/>
     </restriction>
   </simpleType>
 
-  <simpleType name="elevation">
+  <simpleType name="elevation_25FeetMSL"
+              dfdl:lengthKind="implicit">
     <annotation><documentation>
       Units are 25 feet above Mean Sea Level.
     </documentation></annotation>
@@ -118,32 +148,34 @@
       <maxLength value="1"/>
       <enumeration value="S"/><!-- start point -->
       <enumeration value="W"/><!-- way point -->
-      <enumeration value="E"/><!-- end point --> 
+      <enumeration value="E"/><!-- end point -->
     </restriction>
   </simpleType>
 
   <simpleType name="trackPointQuality">
-     <restriction base="xs:string">
-       <minLength value="1"/>
-       <maxLength value="1"/>
-       <enumeration value="E"/><!-- estimated -->
-       <enumeration value="A"/><!-- actual or observed -->
-     </restriction>
+    <restriction base="xs:string">
+      <minLength value="1"/>
+      <maxLength value="1"/>
+      <enumeration value="E"/><!-- estimated -->
+      <enumeration value="A"/><!-- actual or observed -->
+    </restriction>
   </simpleType>
 
-  <simpleType name="course">
+  <simpleType name="course_integerDegrees"
+              dfdl:lengthKind="implicit">
     <restriction base="xs:unsignedShort">
       <minInclusive value="0"/>
       <maxInclusive value="359"/>
     </restriction>
   </simpleType>
 
-  <simpleType name="speed">
+  <simpleType name="speed_dataMilesPerHour"
+              dfdl:lengthKind="implicit">
     <annotation><documentation>
       Units are data-miles per hour. A data-mile is 6000 feet.
     </documentation></annotation>
     <restriction base="xs:unsignedShort">
-      <maxInclusive value="20000"/><!-- this limit is a bit above the max reentry speed of a ballistic missile -->
+      <maxInclusive value="2000"/>
     </restriction>
   </simpleType>
 
@@ -169,18 +201,6 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="entityTypeDetail">
-    <restriction base="xs:unsignedShort">
-      <enumeration value="0"/> <!-- means unspecified aka "no statement" -->
-      <enumeration value="1"/> <!-- some entity type -->
-      <enumeration value="2"/> <!-- some other entity type -->
-      <!--
-      not bothering to fill in more of these until needed for examples
-      -->
-      <maxInclusive value="400"/><!-- values above this are unused -->
-    </restriction>
-  </simpleType>
-
   <simpleType name="identDescription"
     dfdl:textTrimKind="padChar"
     dfdl:textPadKind="padChar"
@@ -198,13 +218,9 @@
     <restriction base="xs:string">
       <minLength value="1"/>
       <maxLength value="38"/>
-      <pattern value="[A-Z0-9]+([. \-_:/][A-Z0-9()\[\]]+)*"/>
-      <!-- using regex "+" and "*" here is ok, since there is a maxLength facet limiting the length -->
+      <pattern value="[A-Z0-9]{1,38}([. \-_:/][A-Z0-9()\[\]]{1,38}){0,38}"/>
     </restriction>
   </simpleType>
 
-  <complexType name="markerElement">
-    <sequence/>
-  </complexType>
 
 </schema>

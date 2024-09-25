@@ -18,7 +18,7 @@
 
   <annotation>
     <appinfo source="http://www.ogf.org/dfdl/">
-      <dfdl:defineFormat name="fakeTDL-base">
+      <dfdl:defineFormat name="baseFormat">
         <!--
         In your base format, it is worth it to define all properties relevant to your format
         even if they have the same value as in the included DFDLGeneralFormat (which is a
@@ -38,9 +38,50 @@
           alignment="1"
           binaryNumberRep="binary"
           calendarTimeZone="UTC"
-        />
+          lengthKind="implicit" />
+        <!--
+        These properties are also needed by this schema.
+        They are listed here for educational purposes, but
+        rather than include them in this schema explicitly, we just
+        inherit (from DFDLGeneralFormat) a set of reasonable defaults for properties
+        that we include above and ref from our format.
+
+        We're still being explicit about *every* DFDL property.
+        We either define it here, or we get it from DFDLGeneralFormat.
+
+          ignoreCase="no"
+
+          textBidi="no" encodingErrorPolicy="replace"
+
+          leadingSkip="0" trailingSkip="0"
+
+          initiatedContent="no" escapeSchemeRef=""
+          initiator="" separator="" terminator=""
+
+          sequenceKind="ordered" floating="no"
+
+          truncateSpecifiedLengthString="no" textStringJustification="left"
+          textPadKind="none" textTrimKind="none"
+
+          calendarFirstDayOfWeek="Sunday" calendarDaysInFirstWeek="4"
+          calendarCheckPolicy="strict" calendarLanguage="en"
+
+          choiceLengthKind="implicit"
+        -->
       </dfdl:defineFormat>
+
       <dfdl:format ref="fakeTDL:fakeTDL"/>
+
+      <dfdl:defineFormat name="msg">
+        <!--
+        This reusable format definition centralizes the magic number 64
+        which is the message length for fakeTDL
+        -->
+        <dfdl:format
+          lengthKind="explicit"
+          length="64"/>
+      </dfdl:defineFormat>
+
     </appinfo>
   </annotation>
 </schema>
