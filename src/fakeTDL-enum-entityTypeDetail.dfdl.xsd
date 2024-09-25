@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
+  targetNamespace="urn:com.owlcyberdefense.fakeTDL">
+
+  <include schemaLocation="fakeTDL-base.dfdl.xsd" />
+
+  <annotation>
+    <appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format  ref="fakeTDL:baseFormat" />
+
+    </appinfo>
+  </annotation>
+
+  <simpleType name="entityTypeDetail">
+    <!--
+      Note: there are other ways of doing numeric enums that require
+      use of a Daffodil-specific extension (dfdlx:repType) to the DFDL v1.0 language.
+      See the github DFDLSchema MIL-STD-2045 for examples of this alternative.
+    -->
+    <restriction base="xs:unsignedShort">
+      <enumeration value="0"/> <!-- means unspecified aka "no statement" -->
+      <enumeration value="1"/> <!-- some entity type -->
+      <enumeration value="2"/> <!-- some other entity type -->
+      <!--
+      Imagine there are dozens or hundreds more entries in this enum.
+
+      The reason we isolate large enums in separate files is just about
+      convenience of text editing. It eliminates the need to scroll past
+      hundreds of lines of a large enum definition often.
+
+      Small enums (fewer than perhaps a dozen values) don't need separate files.
+
+      -->
+      <maxInclusive value="400"/><!-- values above this are unused -->
+    </restriction>
+  </simpleType>
+
+
+</schema>

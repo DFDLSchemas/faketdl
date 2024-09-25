@@ -36,63 +36,59 @@
   <annotation>
     <appinfo source="http://www.ogf.org/dfdl/">
 
-      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
-
-      <dfdl:defineFormat name="fakeTDL-fixedLengthMessage">
-        <!--
-        This reusable format definition centralizes the magic number 64
-        which is the message length for fakeTDL
-        -->
-        <dfdl:format
-          lengthKind="explicit"
-          length="64"/>
-      </dfdl:defineFormat>
+      <dfdl:format  ref="fakeTDL:baseFormat" />
 
     </appinfo>
   </annotation>
 
   <complexType name="fakeTDLType">
-    <annotation>
-      <documentation>
-        To define a fakeTDL message element, use this type as the element type
-        and add the dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage" property to the element
-        declaration.
-
-        (See fakeTDL.dfdl.xsd which defines elements.)
-      </documentation>
-    </annotation>
     <sequence>
       <element name="messageType" type="fakeTDL:messageType"/>
-      <element name="source" type="fakeTDL:unitNumber"/>
-      <element name="sendTime" type="fakeTDL:timeOfDay"/>
-      <choice dfdl:choiceDispatchKey='{ messageType }'>
-        <group ref="fakeTDL:track" dfdl:choiceBranchKey="T"/>
-        <group ref="fakeTDL:ident" dfdl:choiceBranchKey="D"/>
-        <group ref="fakeTDL:ack" dfdl:choiceBranchKey="A"/>
+      <choice dfdl:choiceDispatchKey="{ messageType }">
+        <element name="track" type="fakeTDL:trackMessageType" dfdl:choiceBranchKey="T"/>
+        <element name="identity" type="fakeTDL:identityMessageType" dfdl:choiceBranchKey="D"/>
+        <element name="ack" type="fakeTDL:ackMessageType" dfdl:choiceBranchKey="A"/>
+        <!--
+        dfdl:choiceDispatchKey selects the branch with the matching dfdl:choiceBranchKey
+        in constant time (using a hash table lookup). It avoids any point of uncertainty
+        in the parsing.
+
+        So this is the technique to use if there are a large number of message types.
+        -->
       </choice>
     </sequence>
   </complexType>
 
-
-  <group name="track">
+  <group name="everyMessageFields">
     <sequence>
-      <element name="track" type="fakeTDL:markerElement"/>
-      <group ref="fakeTDL:ackRelated"/>
-      <element name="sourceLat" type="fakeTDL:latitude"/>
-      <element name="sourceLon" type="fakeTDL:longitude"/>
-      <element name="sourceElev" type="fakeTDL:elevation"/>
-      <element name="trackNum" type="fakeTDL:unitNumber"/>
-      <element name="time" type="fakeTDL:timeOfDay"/>
-      <element name="lat" type="fakeTDL:latitude"/>
-      <element name="lon" type="fakeTDL:longitude"/>
-      <element name="elev" type="fakeTDL:elevation"/>
-      <element name="pointType" type="fakeTDL:trackPointType"/>
-      <element name="quality" type="fakeTDL:trackPointQuality"/>
-      <element name="course" type="fakeTDL:course"/>
-      <element name="speed" type="fakeTDL:speed"/>
+      <element name="source" type="fakeTDL:unitNumber"/>
+      <element name="sendTime" type="fakeTDL:timeOfDay"/>
     </sequence>
   </group>
 
+  <complexType name="trackMessageType">
+    <sequence>
+      <group ref="fakeTDL:everyMessageFields"/>
+      <group ref="fakeTDL:ackRelated"/>
+      <element name="sourceLat" type="fakeTDL:latitude_degrees"/>
+      <element name="sourceLon" type="fakeTDL:longitude_degrees"/>
+      <element name="sourceElev" type="fakeTDL:elevation_25FeetMSL"/>
+      <element name="trackNum" type="fakeTDL:unitNumber"/>
+      <element name="time" type="fakeTDL:timeOfDay"/>
+      <element name="lat" type="fakeTDL:latitude_degrees"/>
+      <element name="lon" type="fakeTDL:longitude_degrees"/>
+      <element name="elev" type="fakeTDL:elevation_25FeetMSL"/>
+      <element name="pointType" type="fakeTDL:trackPointType"/>
+      <element name="quality" type="fakeTDL:trackPointQuality"/>
+      <element name="course" type="fakeTDL:course_integerDegrees"/>
+      <element name="speed" type="fakeTDL:speed_dataMilesPerHour"/>
+    </sequence>
+  </complexType>
+
+  <!--
+  This is just factoring out two fields that are in both track and ident
+  messages
+  -->
   <group name="ackRelated">
     <sequence>
       <element name="mustAck" type="fakeTDL:mustAck"/>
@@ -100,9 +96,9 @@
     </sequence>
   </group>
 
-  <group name="ident">
+  <complexType name="identityMessageType">
     <sequence>
-      <element name="identity" type="fakeTDL:markerElement"/>
+      <group ref="fakeTDL:everyMessageFields"/>
       <group ref="fakeTDL:ackRelated"/>
       <element name="trackNum" type="fakeTDL:unitNumber"/>
       <element name="time" type="fakeTDL:timeOfDay"/>
@@ -111,54 +107,43 @@
       <element name="type" type="fakeTDL:entityTypeDetail"/> <!-- 26 bytes to an including here -->
       <element name="desc" type="fakeTDL:identDescription"/> <!-- leaves 38 chars for description -->
     </sequence>
-  </group>
+  </complexType>
 
-  <group name="ack">
+  <complexType name="ackMessageType">
     <sequence>
-      <element name="ack" type="fakeTDL:markerElement"/>
+      <group ref="fakeTDL:everyMessageFields"/>
       <!-- acks themselves don't have the "ackRelated" fields -->
       <element name="dest" type="fakeTDL:unitNumber"/>
       <!--
       our 64-byte messages have 9 bytes of common fields, then 5 more for dest field
       so we have 64-14, or 50 bytes left to put messageIDs, each of which is 4 bytes.
-      so we can fit up to 12 messageIDs. 2 bytes will be unused at the end of the message.
-
-      Hence, at least the first messageID must be non-zero.
-
-      We use a fillByte of zero here so that an unused messageID/item has value 0.
-      This lets the array of messageIDs be variable length in the infoset even though
-      the data is fixed length.
+      so we can fit up to 12 messageIDs.
       -->
-      <element name="ackID"
-               dfdl:fillByte="%#r00;"
-               dfdl:length="48"
-               dfdl:lengthKind="explicit">
+      <element name="ackID">
         <complexType>
           <sequence>
+            <element name="count"
+                     dfdl:outputValueCalc='{ fn:count(../item) }'>
+              <simpleType>
+                <restriction base="xs:unsignedShort">
+                  <minInclusive value="1"/>
+                  <maxInclusive value="12"/>
+                </restriction>
+              </simpleType>
+            </element>
             <!--
             A common DFDL idiom is to have a named element representing the entire array,
             and the items of the array have a generic name like "item".
             -->
             <element name="item" type="fakeTDL:messageID"
-                     minOccurs="1" maxOccurs="12" dfdl:occursCountKind="implicit">
-              <annotation>
-                <appinfo source="http://www.ogf.org/dfdl/">
-                  <!--
-                  This discriminator means the implicit number of occurrences
-                  extends only while the values are non-zero.
-
-                  DFDL has an occursCountKind="stopValue", but it is not implemented in
-                  Daffodil as of version 3.9.0, so we use occursCountKind 'implicit'
-                  and a dfdl:discriminator to determine when we have another array element.
-                  -->
-                  <dfdl:discriminator>{ . ne 0}</dfdl:discriminator>
-                </appinfo>
-              </annotation>
+                     minOccurs="1" maxOccurs="12"
+                     dfdl:occursCountKind="expression"
+                     dfdl:occursCount='{ ../count }'>
             </element>
           </sequence>
         </complexType>
       </element>
     </sequence>
-  </group>
+  </complexType>
 
 </schema>
