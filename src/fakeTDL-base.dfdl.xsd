@@ -38,7 +38,36 @@
           alignment="1"
           binaryNumberRep="binary"
           calendarTimeZone="UTC"
-        />
+          lengthKind="implicit" />
+        <!--
+        These properties are also needed by this schema.
+        They are listed here for educational purposes, but
+        rather than include them in this schema explicitly, we just
+        inherit (from DFDLGeneralFormat) a set of reasonable defaults for properties
+        that we include above and ref from our format.
+
+        We're still being explicit about *every* DFDL property.
+        We either define it here, or we get it from DFDLGeneralFormat.
+
+          ignoreCase="no"
+
+          textBidi="no" encodingErrorPolicy="replace"
+
+          leadingSkip="0" trailingSkip="0"
+
+          initiatedContent="no" escapeSchemeRef=""
+          initiator="" separator="" terminator=""
+
+          sequenceKind="ordered" floating="no"
+
+          truncateSpecifiedLengthString="no" textStringJustification="left"
+          textPadKind="none" textTrimKind="none"
+
+          calendarFirstDayOfWeek="Sunday" calendarDaysInFirstWeek="4"
+          calendarCheckPolicy="strict" calendarLanguage="en"
+
+          choiceLengthKind="implicit"
+        -->
       </dfdl:defineFormat>
       <dfdl:format ref="fakeTDL:fakeTDL"/>
     </appinfo>
