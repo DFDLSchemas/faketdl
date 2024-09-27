@@ -86,7 +86,7 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="latitude"
+  <simpleType name="latitude_degrees"
     dfdl:binaryFloatRep="ieee">
     <restriction base="xs:float">
       <minInclusive value="-90.0"/>
@@ -94,7 +94,7 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="longitude"
+  <simpleType name="longitude_degrees"
     dfdl:binaryFloatRep="ieee">
     <restriction base="xs:float">
       <minInclusive value="-180.0"/>
@@ -102,7 +102,7 @@
     </restriction>
   </simpleType>
 
-  <simpleType name="elevation">
+  <simpleType name="elevation_25FeetMSL">
     <annotation><documentation>
       Units are 25 feet above Mean Sea Level.
     </documentation></annotation>
@@ -131,14 +131,14 @@
      </restriction>
   </simpleType>
 
-  <simpleType name="course">
+  <simpleType name="course_integerDegrees">
     <restriction base="xs:unsignedShort">
       <minInclusive value="0"/>
       <maxInclusive value="359"/>
     </restriction>
   </simpleType>
 
-  <simpleType name="speed">
+  <simpleType name="speed_dataMilesPerHour">
     <annotation><documentation>
       Units are data-miles per hour. A data-mile is 6000 feet.
     </documentation></annotation>
@@ -170,6 +170,11 @@
   </simpleType>
 
   <simpleType name="entityTypeDetail">
+    <annotation><documentation>
+      Note: there are other ways of doing numeric enums that require
+      use of a Daffodil-specific extension (dfdlx:repType) to the DFDL v1.0 language.
+      See the github DFDLSchema MIL-STD-2045 for examples of this alternative.
+    </documentation></annotation>
     <restriction base="xs:unsignedShort">
       <enumeration value="0"/> <!-- means unspecified aka "no statement" -->
       <enumeration value="1"/> <!-- some entity type -->
@@ -203,7 +208,12 @@
     </restriction>
   </simpleType>
 
-  <complexType name="markerElement">
+  <complexType name="upaMarkerElement">
+    <annotation><documentation>
+      This type is used for empty marker elements the purpose of which is to
+      eliminate XML Schema Unique Particle Attribution (UPA) errors.
+      See: https://en.wikipedia.org/wiki/Unique_Particle_Attribution
+    </documentation></annotation>
     <sequence/>
   </complexType>
 

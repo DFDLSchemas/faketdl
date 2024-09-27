@@ -19,21 +19,19 @@ but they are commonly needed so we have them here for future convenience.
   defaultValidation="on">
 
   <!--
-  This parser test case just points at the various test files: the schema (aka model),
+  This positive parser test case just points at the various test files: the schema (aka model),
   the input data (aka document), and the expected output (aka infoset).
 
   Per the defaultRoundTrip 'onePass' above, this test will
   parse the data, compare with the expected infoset,
   then unparse the data, and compare with the original data.
-
-  TDML also allows you to create negative tests that expect various kinds of errors.
   -->
-  <parserTestCase name="test_fakeTDLFile_01" root="fakeTDLFile" model="fakeTDL.dfdl.xsd">
+  <parserTestCase name="test_msg_01" root="fakeTDL" model="fakeTDL.dfdl.xsd">
     <document>
-      <documentPart type="file">test_01.dat</documentPart>
+      <documentPart type="file">test_msg_01.dat</documentPart>
     </document>
     <infoset>
-      <dfdlInfoset type="file">test_01.dat.xml</dfdlInfoset>
+      <dfdlInfoset type="file">test_msg_01.xml</dfdlInfoset>
     </infoset>
   </parserTestCase>
 
@@ -43,7 +41,7 @@ but they are commonly needed so we have them here for future convenience.
   in the test case right here (in bits, bytes, or text), and also to include the
   expected infoset as XML right here in the test case.
   -->
-  <parserTestCase name="test_fakeTDL_01" root="fakeTDL" model="fakeTDL.dfdl.xsd">
+  <parserTestCase name="test_msg_02" root="fakeTDL" model="fakeTDL.dfdl.xsd">
     <document>
       <documentPart type="byte"><![CDATA[
         5441 4731 3233 0102 0300 0000 0001 4224
@@ -77,5 +75,51 @@ but they are commonly needed so we have them here for future convenience.
       </dfdlInfoset>
     </infoset>
   </parserTestCase>
+
+  <parserTestCase name="test_msg_bad_01" root="fakeTDL" model="fakeTDL.dfdl.xsd">
+    <document>
+      <documentPart type="file">test_msg_bad_01.dat</documentPart>
+    </document>
+    <errors>
+      <error>Parse Error</error>
+      <error>Choice dispatch key (P) failed to match any of the branch keys</error>
+    </errors>
+  </parserTestCase>
+
+  <unparserTestCase name="test_msg_bad_02" root="fakeTDL" model="fakeTDL.dfdl.xsd">
+    <infoset>
+      <dfdlInfoset type="file">test_msg_bad_02.xml</dfdlInfoset>
+    </infoset>
+    <errors>
+      <error>Unparse Error</error>
+      <error>sendTime</error>
+      <error>25:99</error>
+    </errors>
+  </unparserTestCase>
+
+  <!--
+  This positive parser test case tests a whole file of messages at once.
+  Notice the root element is fakeTDLFile, not just fakeTDL for a single message.
+  -->
+  <parserTestCase name="test_file_01" root="fakeTDLFile" model="fakeTDL.dfdl.xsd">
+    <document>
+      <documentPart type="file">test_file_01.dat</documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset type="file">test_file_01.xml</dfdlInfoset>
+    </infoset>
+  </parserTestCase>
+
+  <parserTestCase name="test_file_bad_01" root="fakeTDLFile" model="fakeTDL.dfdl.xsd">
+    <document>
+      <documentPart type="file">test_file_bad_01.dat</documentPart>
+    </document>
+    <errors>
+      <error>Parse Error</error>
+      <error>insufficient</error><!-- the data on the 3rd message is too short by 1 byte -->
+    </errors>
+  </parserTestCase>
+
+
 
 </testSuite>

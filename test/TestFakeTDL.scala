@@ -21,6 +21,12 @@ class TestFakeTDL {
 
   import TestFakeTDL._
 
-  @Test def test_fakeTDL_01(): Unit = { runner.runOneTest("test_fakeTDL_01") }
-  @Test def test_fakeTDLFile_01(): Unit = { runner.runOneTest("test_fakeTDLFile_01") }
+  @Test def test_msg_01(): Unit = { runner.runOneTest("test_msg_01") }
+  @Test def test_msg_02(): Unit = { runner.runOneTest("test_msg_02") }
+  @Test def test_msg_bad_01(): Unit = { runner.runOneTest("test_msg_bad_01") }
+  @Test def test_msg_bad_02(): Unit = { runner.runOneTest("test_msg_bad_02") }
+
+  @Test def test_file_01(): Unit = { runner.runOneTest("test_file_01") }
+  @Test def test_file_bad_01(): Unit = { runner.runOneTest("test_file_bad_01") }
+
 }

@@ -76,20 +76,20 @@
 
   <group name="track">
     <sequence>
-      <element name="track" type="fakeTDL:markerElement"/>
+      <element name="track" type="fakeTDL:upaMarkerElement"/>
       <group ref="fakeTDL:ackRelated"/>
-      <element name="sourceLat" type="fakeTDL:latitude"/>
-      <element name="sourceLon" type="fakeTDL:longitude"/>
-      <element name="sourceElev" type="fakeTDL:elevation"/>
+      <element name="sourceLat" type="fakeTDL:latitude_degrees"/>
+      <element name="sourceLon" type="fakeTDL:longitude_degrees"/>
+      <element name="sourceElev" type="fakeTDL:elevation_25FeetMSL"/>
       <element name="trackNum" type="fakeTDL:unitNumber"/>
       <element name="time" type="fakeTDL:timeOfDay"/>
-      <element name="lat" type="fakeTDL:latitude"/>
-      <element name="lon" type="fakeTDL:longitude"/>
-      <element name="elev" type="fakeTDL:elevation"/>
+      <element name="lat" type="fakeTDL:latitude_degrees"/>
+      <element name="lon" type="fakeTDL:longitude_degrees"/>
+      <element name="elev" type="fakeTDL:elevation_25FeetMSL"/>
       <element name="pointType" type="fakeTDL:trackPointType"/>
       <element name="quality" type="fakeTDL:trackPointQuality"/>
-      <element name="course" type="fakeTDL:course"/>
-      <element name="speed" type="fakeTDL:speed"/>
+      <element name="course" type="fakeTDL:course_integerDegrees"/>
+      <element name="speed" type="fakeTDL:speed_dataMilesPerHour"/>
     </sequence>
   </group>
 
@@ -102,7 +102,7 @@
 
   <group name="ident">
     <sequence>
-      <element name="identity" type="fakeTDL:markerElement"/>
+      <element name="identity" type="fakeTDL:upaMarkerElement"/>
       <group ref="fakeTDL:ackRelated"/>
       <element name="trackNum" type="fakeTDL:unitNumber"/>
       <element name="time" type="fakeTDL:timeOfDay"/>
@@ -115,7 +115,7 @@
 
   <group name="ack">
     <sequence>
-      <element name="ack" type="fakeTDL:markerElement"/>
+      <element name="ack" type="fakeTDL:upaMarkerElement"/>
       <!-- acks themselves don't have the "ackRelated" fields -->
       <element name="dest" type="fakeTDL:unitNumber"/>
       <!--
