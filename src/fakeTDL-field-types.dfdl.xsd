@@ -203,7 +203,7 @@
     <restriction base="xs:string">
       <minLength value="1"/>
       <maxLength value="38"/>
-      <pattern value="[A-Z0-9]+([. \-_:/][A-Z0-9()\[\]]+)*"/>
+      <pattern value="[A-Z0-9]{1,38}([. \-_:/][A-Z0-9()\[\]]{1,38}){0,38}"/>
       <!-- using regex "+" and "*" here is ok, since there is a maxLength facet limiting the length -->
     </restriction>
   </simpleType>
