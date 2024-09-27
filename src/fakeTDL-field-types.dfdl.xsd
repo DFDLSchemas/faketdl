@@ -35,10 +35,6 @@
     <restriction base="xs:string" >
       <minLength value="1"/>
       <maxLength value="1"/>
-      <!--
-      Note: XML Schema cybersecurity best practices say to always give a maximum length to types that can otherwise
-      have unbounded lengths
-      -->
       <enumeration value="T"/><!-- Track -->
       <enumeration value="D"/><!-- D for iDentity -->
       <enumeration value="A"/><!-- Ack -->
@@ -204,7 +200,6 @@
       <minLength value="1"/>
       <maxLength value="38"/>
       <pattern value="[A-Z0-9]{1,38}([. \-_:/][A-Z0-9()\[\]]{1,38}){0,38}"/>
-      <!-- using regex "+" and "*" here is ok, since there is a maxLength facet limiting the length -->
     </restriction>
   </simpleType>
 
