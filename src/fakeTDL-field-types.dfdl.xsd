@@ -47,10 +47,6 @@
       <minLength value="5"/>
       <maxLength value="5"/>
       <pattern value="[A-Z0-9]{2}[0-9]{3}"/>
-      <!--
-      Note: XML Schema cybersecurity best practices say to avoid the "*" and "+" characters in regular expressions
-      and to be explicit about the minimum and maximum number of repeats of any sub-pattern.
-      -->
     </restriction>
   </simpleType>
 
