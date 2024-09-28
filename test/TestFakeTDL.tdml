@@ -3,7 +3,7 @@
 TDML is a convenient way to package tests of DFDL schemas and test data
 
 In this test suite, we use the TDML namespace as the default namespace to
-avoid the need to have "tdml:" prefixes on all the TDML elements.
+avoid the need to have "" prefixes on all the TDML elements.
 
 There are a few extra namespace prefix definitions here that aren't used yet,
 but they are commonly needed so we have them here for future convenience.
@@ -121,5 +121,65 @@ but they are commonly needed so we have them here for future convenience.
   </parserTestCase>
 
 
+  <parserTestCase name="test_msg_invalid_01" root="fakeTDL" model="fakeTDL.dfdl.xsd">
+    <document>
+      <documentPart type="byte">
+        5441 4731 325A 0102 0300 0000 0001 446B
+        4000 C472 8000 FC17 5859 5A5A 5901 0201
+        4452 4666 C459 799A 7D01 5851 024B 07D1
+        5858 5858 5858 5858 5858 5858 5858 5858
+      </documentPart>
+    </document>
+    <infoset>
+      <dfdlInfoset>
+        <fakeTDL xmlns="">
+          <messageType>T</messageType>
+          <source>AG12Z</source>
+          <sendTime>01:02:03</sendTime>
+          <track/>
+          <mustAck>false</mustAck>
+          <messageID>1</messageID>
+          <sourceLat>941.0</sourceLat>
+          <sourceLon>-970.0</sourceLon>
+          <sourceElev>-1001</sourceElev>
+          <trackNum>XYZZY</trackNum>
+          <time>01:02:01</time>
+          <lat>841.1</lat>
+          <lon>-869.9</lon>
+          <elev>32001</elev>
+          <pointType>X</pointType>
+          <quality>Q</quality>
+          <course>587</course>
+          <speed>2001</speed>
+        </fakeTDL>
+      </dfdlInfoset>
+    </infoset>
+    <validationErrors>
+      <error>quality</error>
+      <error>enumeration</error>
+      <error>E|A</error>
+      <error>sourceElev</error>
+      <error>minInclusive</error>
+      <error>-1000</error>
+      <error>pointType</error>
+      <error>S|W|E</error>
+      <error>sourceLon</error>
+      <error>-180</error>
+      <error>trackNum</error>
+      <error>pattern</error>
+      <error>[A-Z0-9]{2}[0-9]{3}</error>
+      <error>lon</error>
+      <error>course</error>
+      <error>maxInclusive</error>
+      <error>359</error>
+      <error>lat</error>
+      <error>90.0</error>
+      <error>speed</error>
+      <error>2000</error>
+      <error>source</error>
+      <error>elev</error>
+      <error>32000</error>
+    </validationErrors>
+  </parserTestCase>
 
 </testSuite>
