@@ -139,7 +139,7 @@
       Units are data-miles per hour. A data-mile is 6000 feet.
     </documentation></annotation>
     <restriction base="xs:unsignedShort">
-      <maxInclusive value="20000"/><!-- this limit is a bit above the max reentry speed of a ballistic missile -->
+      <maxInclusive value="2000"/>
     </restriction>
   </simpleType>
 
