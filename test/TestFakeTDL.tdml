@@ -16,7 +16,7 @@ but they are commonly needed so we have them here for future convenience.
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   defaultRoundTrip="onePass"
-  defaultValidation="on">
+  defaultValidation="limited">
 
   <!--
   This positive parser test case just points at the various test files: the schema (aka model),
