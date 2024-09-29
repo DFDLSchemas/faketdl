@@ -18,7 +18,7 @@
 
   <annotation>
     <appinfo source="http://www.ogf.org/dfdl/">
-      <dfdl:defineFormat name="fakeTDL-base">
+      <dfdl:defineFormat name="baseFormat">
         <!--
         In your base format, it is worth it to define all properties relevant to your format
         even if they have the same value as in the included DFDLGeneralFormat (which is a
@@ -69,7 +69,19 @@
           choiceLengthKind="implicit"
         -->
       </dfdl:defineFormat>
+
       <dfdl:format ref="fakeTDL:fakeTDL"/>
+
+      <dfdl:defineFormat name="msg">
+        <!--
+        This reusable format definition centralizes the magic number 64
+        which is the message length for fakeTDL
+        -->
+        <dfdl:format
+          lengthKind="explicit"
+          length="64"/>
+      </dfdl:defineFormat>
+
     </appinfo>
   </annotation>
 </schema>

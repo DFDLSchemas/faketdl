@@ -54,23 +54,24 @@ but they are commonly needed so we have them here for future convenience.
       <dfdlInfoset>
         <fakeTDL xmlns=""> <!-- Trick! Turn off default namespace. That's what xmlns="" does. -->
           <messageType>T</messageType>
-          <source>AG123</source>
-          <sendTime>01:02:03</sendTime>
-          <track/>
-          <mustAck>false</mustAck>
-          <messageID>1</messageID>
-          <sourceLat>41.0</sourceLat>
-          <sourceLon>-70.0</sourceLon>
-          <sourceElev>400</sourceElev>
-          <trackNum>UU777</trackNum>
-          <time>01:02:01</time>
-          <lat>41.1</lat>
-          <lon>-69.9</lon>
-          <elev>350</elev>
-          <pointType>W</pointType>
-          <quality>A</quality>
-          <course>75</course>
-          <speed>200</speed>
+          <track>
+            <source>AG123</source>
+            <sendTime>01:02:03</sendTime>
+            <mustAck>false</mustAck>
+            <messageID>1</messageID>
+            <sourceLat>41.0</sourceLat>
+            <sourceLon>-70.0</sourceLon>
+            <sourceElev>400</sourceElev>
+            <trackNum>UU777</trackNum>
+            <time>01:02:01</time>
+            <lat>41.1</lat>
+            <lon>-69.9</lon>
+            <elev>350</elev>
+            <pointType>W</pointType>
+            <quality>A</quality>
+            <course>75</course>
+            <speed>200</speed>
+          </track>
         </fakeTDL>
       </dfdlInfoset>
     </infoset>
@@ -134,23 +135,24 @@ but they are commonly needed so we have them here for future convenience.
       <dfdlInfoset>
         <fakeTDL xmlns="">
           <messageType>T</messageType>
-          <source>AG12Z</source>
-          <sendTime>01:02:03</sendTime>
-          <track/>
-          <mustAck>false</mustAck>
-          <messageID>1</messageID>
-          <sourceLat>941.0</sourceLat>
-          <sourceLon>-970.0</sourceLon>
-          <sourceElev>-1001</sourceElev>
-          <trackNum>XYZZY</trackNum>
-          <time>01:02:01</time>
-          <lat>841.1</lat>
-          <lon>-869.9</lon>
-          <elev>32001</elev>
-          <pointType>X</pointType>
-          <quality>Q</quality>
-          <course>587</course>
-          <speed>2001</speed>
+          <track>
+            <source>AG12Z</source>
+            <sendTime>01:02:03</sendTime>
+            <mustAck>false</mustAck>
+            <messageID>1</messageID>
+            <sourceLat>941.0</sourceLat>
+            <sourceLon>-970.0</sourceLon>
+            <sourceElev>-1001</sourceElev>
+            <trackNum>XYZZY</trackNum>
+            <time>01:02:01</time>
+            <lat>841.1</lat>
+            <lon>-869.9</lon>
+            <elev>32001</elev>
+            <pointType>X</pointType>
+            <quality>Q</quality>
+            <course>587</course>
+            <speed>2001</speed>
+          </track>
         </fakeTDL>
       </dfdlInfoset>
     </infoset>
