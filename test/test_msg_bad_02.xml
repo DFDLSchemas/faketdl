@@ -1,0 +1,21 @@
+<fakeTDL>
+  <messageType>T</messageType>
+  <track>
+    <source>AG123</source>
+    <sendTime>25:99</sendTime>
+    <mustAck>false</mustAck>
+    <messageID>1</messageID>
+    <sourceLat>41.0</sourceLat>
+    <sourceLon>-70.0</sourceLon>
+    <sourceElev>400</sourceElev>
+    <trackNum>UU777</trackNum>
+    <time>01:02:01</time>
+    <lat>41.1</lat>
+    <lon>-69.9</lon>
+    <elev>350</elev>
+    <pointType>W</pointType>
+    <quality>A</quality>
+    <course>75</course>
+    <speed>200</speed>
+  </track>
+</fakeTDL>

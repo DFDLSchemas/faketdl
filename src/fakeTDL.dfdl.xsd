@@ -28,11 +28,11 @@
 
   <xs:annotation>
     <xs:appinfo source="http://www.ogf.org/dfdl/">
-      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
+      <dfdl:format ref="fakeTDL:baseFormat"/>
     </xs:appinfo>
   </xs:annotation>
 
-  <xs:element name="fakeTDL" type="fakeTDL:fakeTDLType" dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage">
+  <xs:element name="fakeTDL" type="fakeTDL:fakeTDLType" dfdl:ref="fakeTDL:msg">
     <xs:annotation><xs:documentation>
       Use this element to parse/unparse a single fakeTDL message.
     </xs:documentation></xs:annotation>
@@ -47,7 +47,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="fakeTDL" minOccurs="1" maxOccurs="1000" dfdl:occursCountKind="implicit">
+        <xs:element name="fakeTDL" type="fakeTDL:fakeTDLType" dfdl:ref="fakeTDL:msg"
+                    minOccurs="1" maxOccurs="1000" dfdl:occursCountKind="implicit">
           <xs:annotation><xs:appinfo source="http://www.ogf.org/dfdl/">
             <!--
             This array of fakeTDL messages must consume the whole file.
