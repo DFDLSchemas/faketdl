@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:meta="urn:com.owlcyberdefense.dfdl-test-harness"
+  xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL">
+  <!--
+  This schema has no target namespace on purpose.
+
+  It defines a reusable fakeTDL element which can be used directly for testing or
+  incorporated into a larger structure via an element reference.
+
+  It also defines a fakeTDLFile element which is primarily for testing and allows
+  parsing and unparsing files containing many fakeTDL messages.
+
+  Note that a schema with no target namespace cannot have a default namespace definition.
+  That means you can't get away with avoiding the need for the "xs:" prefixes on all
+  the XSD/DFDL keywords in a no-target-namespace schema. As a result, it's best for these
+  no-namespace schemas that define global elements to be kept as small as possible.
+
+  Hence, schema files that define global elements should *only* define global elements.
+  Other definitions of the types/groups used, should go in an imported schema file
+  which has a namespace.
+  -->
+
+  <xs:import namespace="urn:com.owlcyberdefense.fakeTDL" schemaLocation="fakeTDLType.dfdl.xsd" />
+  <xs:import namespace="urn:com.owlcyberdefense.dfdl-test-harness" schemaLocation="/com/owlcyberdefense/dfdl-test-harness/xsd/MetadataHeader.dfdl.xsd" />
+
+  <xs:annotation>
+    <xs:appinfo source="http://www.ogf.org/dfdl/">
+      <dfdl:format ref="fakeTDL:fakeTDL-base"/>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <xs:element name="fakeTDLWithMetadata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="metadata" type="meta:MetadataHeader"/>
+        <xs:element name="fakeTDL" type="fakeTDL:fakeTDLType" dfdl:ref="fakeTDL:fakeTDL-fixedLengthMessage" minOccurs="1" maxOccurs="1000" dfdl:occursCountKind="implicit"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
