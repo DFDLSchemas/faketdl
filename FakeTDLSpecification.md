@@ -100,6 +100,7 @@ or actual/observed.
 - observation time 
 - observed lat/lon and elevation 
 - start/end/waypoint - specifies what kind of track point (1 character, S, E, W)
+- priority - specifies the priority of this track point (1 character, L, H)
 - estimated or actual - 1 character (E or A)
 - course - 2 byte unsigned integer from 0 to 359 degrees.
 - speed - 2 byte unsigned integer from 0 to 2000 data-miles per hour. 
@@ -132,7 +133,7 @@ information.
 - track number (of the entity being described by this message)
 - observation time
 - IFF - Identity Friend or Foe - indicates Friend, Enemy, or Unknown (1 character, F, E, or U)
-- entity category (Land, Sea, Sub, Air, Weapon) (1 character, L, S, U, A, or W)
+- entity category (Land, Sea, Sub, Air, Weapon, Orbit) (1 character, L, S, U, A, W, or O)
 - type - numeric identifier of specific entity (2 byte unsigned integer) 0 means type unspecified.
 - description (text) - up to 38 characters of text restricted to:
   - Upper case letters, digits, spaces, parentheses, square brackets
