@@ -77,7 +77,7 @@ are filled with 0x53 (which corresponds to ASCII 'X' if you look at raw data as 
 
 All messages start with these fields:
 
-- messageType - 1 character (T, D, or A for Track, IDentity, and Ack)
+- messageType - 1 character tag (T, D, or A for Track, IDentity, and Ack)
 - source unit number - originator of the message (5 characters)
 - message send time - time of day. Note that 
   message send time is distinguished from the time an observation was made. 

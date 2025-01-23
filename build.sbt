@@ -2,7 +2,7 @@ name := "dfdl-fakeTDL"
 
 organization := "com.owlcyberdefense"
 
-version := "1.0.1"
+version := "1.0.2"
 
 // for details about DaffodilPlugin settings, see https://github.com/apache/daffodil-sbt
 enablePlugins(DaffodilPlugin)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fakeTDLFile>
   <fakeTDL>
-    <messageType>T</messageType>
     <track>
       <source>AG123</source>
       <sendTime>01:02:03</sendTime>
@@ -22,7 +21,6 @@
     </track>
   </fakeTDL>
   <fakeTDL>
-    <messageType>D</messageType>
     <identity>
       <source>AG123</source>
       <sendTime>01:02:04</sendTime>
@@ -37,7 +35,6 @@
     </identity>
   </fakeTDL>
   <fakeTDL>
-    <messageType>A</messageType>
     <ack>
       <source>BE234</source>
       <sendTime>01:02:14</sendTime>

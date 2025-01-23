@@ -53,7 +53,6 @@ but they are commonly needed so we have them here for future convenience.
     <infoset>
       <dfdlInfoset>
         <fakeTDL xmlns=""> <!-- Trick! Turn off default namespace. That's what xmlns="" does. -->
-          <messageType>T</messageType>
           <track>
             <source>AG123</source>
             <sendTime>01:02:03</sendTime>
@@ -83,7 +82,7 @@ but they are commonly needed so we have them here for future convenience.
     </document>
     <errors>
       <error>Parse Error</error>
-      <error>Choice dispatch key (P) failed to match any of the branch keys</error>
+      <error>Choice dispatch key (80) failed to match any of the branch keys</error>
     </errors>
   </parserTestCase>
 
@@ -134,7 +133,6 @@ but they are commonly needed so we have them here for future convenience.
     <infoset>
       <dfdlInfoset>
         <fakeTDL xmlns="">
-          <messageType>T</messageType>
           <track>
             <source>AG12Z</source>
             <sendTime>01:02:03</sendTime>
