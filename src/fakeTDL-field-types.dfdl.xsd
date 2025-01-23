@@ -33,17 +33,6 @@
     </appinfo>
   </annotation>
 
-  <simpleType name="messageType"
-              dfdl:lengthKind="implicit">
-    <restriction base="xs:string" >
-      <minLength value="1"/>
-      <maxLength value="1"/>
-      <enumeration value="T"/><!-- Track -->
-      <enumeration value="D"/><!-- D for iDentity -->
-      <enumeration value="A"/><!-- Ack -->
-    </restriction>
-  </simpleType>
-
   <simpleType name="unitNumber"
               dfdl:lengthKind="implicit">
     <restriction base="xs:string">

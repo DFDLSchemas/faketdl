@@ -5,6 +5,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+  xmlns:dfdlx="http://www.ogf.org/dfdl/dfdl-1.0/extensions"
   xmlns:fakeTDL="urn:com.owlcyberdefense.fakeTDL"
   targetNamespace="urn:com.owlcyberdefense.fakeTDL">
 
@@ -43,17 +44,31 @@
 
   <complexType name="fakeTDLType">
     <sequence>
-      <element name="messageType" type="fakeTDL:messageType"/>
-      <choice dfdl:choiceDispatchKey="{ messageType }">
-        <element name="track" type="fakeTDL:trackMessageType" dfdl:choiceBranchKey="T"/>
-        <element name="identity" type="fakeTDL:identityMessageType" dfdl:choiceBranchKey="D"/>
-        <element name="ack" type="fakeTDL:ackMessageType" dfdl:choiceBranchKey="A"/>
+      <!--
+      We would really like to make the choice below use dfdl:initiatedContent="yes"
+      with each choice branch having a distinct 1-character dfdl:initiator.
+      But unfortunately, Daffodil 3.10.0 and prior do not optimize this into a
+      constant-time dispatch. Rather, it will try each branch in sequence, which
+      is linear in the number of branches. We only have 3, but in a real TDL
+      there would be dozens of message types.
+
+      So instead we use a choice-by-dispatch, which is constant time, but
+      we use a Daffodil extension of DFDL: the dfdlx:lookAhead() function.
+      -->
+      <choice dfdl:choiceDispatchKey="{ xs:string(dfdlx:lookAhead(0, 8)) }">
+        <!--
+        In the above choiceDispatchKey expression, it would be nice if DFDL or Daffodil provided
+        a way to convert this lookAhead() integer value to a character (T, D, or A) based on Unicode codepoint values.
+        But there is no such iToA-like function in DFDL v1.0 nor Daffodil extensions (as of Daffodil 3.10.0 and prior)
+        so we have to just use the ascii code as a decimal number for the choice dispatch.
+        -->
+        <element name="track" type="fakeTDL:trackMessageType" dfdl:initiator="T" dfdl:choiceBranchKey="84"/>
+        <element name="identity" type="fakeTDL:identityMessageType" dfdl:initiator="D" dfdl:choiceBranchKey="68"/>
+        <element name="ack" type="fakeTDL:ackMessageType" dfdl:initiator="A" dfdl:choiceBranchKey="65"/>
         <!--
         dfdl:choiceDispatchKey selects the branch with the matching dfdl:choiceBranchKey
         in constant time (using a hash table lookup). It avoids any point of uncertainty
-        in the parsing.
-
-        So this is the technique to use if there are a large number of message types.
+        in the parsing. So this is the technique of choice in Daffodil (as of 3.10.0 or prior version).
         -->
       </choice>
     </sequence>
