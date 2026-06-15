@@ -1,14 +1,12 @@
 import org.apache.daffodil.tdml.Runner
 
-import org.junit.AfterClass
+import org.apache.daffodil.junit.tdml.TdmlSuite
+import org.apache.daffodil.junit.tdml.TdmlTests
+
 import org.junit.Test
 
-object TestFakeTDL {
-  lazy val runner = Runner("/", "TestFakeTDL.tdml")
-
-  @AfterClass def shutDown(): Unit = {
-    runner.reset
-  }
+object TestFakeTDL extends TdmlSuite {
+  val tdmlResource = "/TestFakeTDL.tdml"
 }
 
 /**
@@ -17,18 +15,17 @@ object TestFakeTDL {
  *
  * One can also run tests from the Daffodil Command Line Interface (CLI)
  */
-class TestFakeTDL {
+class TestFakeTDL extends TdmlTests {
+  val tdmlSuite = TestFakeTDL
 
-  import TestFakeTDL._
+  @Test def test_msg_01() = test
+  @Test def test_msg_02() = test
+  @Test def test_msg_bad_01() = test
+  @Test def test_msg_bad_02() = test
 
-  @Test def test_msg_01(): Unit = { runner.runOneTest("test_msg_01") }
-  @Test def test_msg_02(): Unit = { runner.runOneTest("test_msg_02") }
-  @Test def test_msg_bad_01(): Unit = { runner.runOneTest("test_msg_bad_01") }
-  @Test def test_msg_bad_02(): Unit = { runner.runOneTest("test_msg_bad_02") }
+  @Test def test_file_01() = test
+  @Test def test_file_bad_01() = test
 
-  @Test def test_file_01(): Unit = { runner.runOneTest("test_file_01") }
-  @Test def test_file_bad_01(): Unit = { runner.runOneTest("test_file_bad_01") }
-
-  @Test def test_msg_invalid_01(): Unit = { runner.runOneTest("test_msg_invalid_01") }
+  @Test def test_msg_invalid_01() = test
 
 }
